@@ -1,3 +1,6 @@
+// Array to store tasks
+const tasks = [];
+
 // Function to add a new task
 function addTask(taskName, category, deadline, status) {
     const task = {
@@ -6,4 +9,6 @@ function addTask(taskName, category, deadline, status) {
         deadline: deadline,
         status: status
     };
+    tasks.push(task);
+    return task;
 }
