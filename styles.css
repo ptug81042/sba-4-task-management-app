@@ -32,7 +32,7 @@ form#task-form {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-    max-width: 400px;
+    max-width: 500px;
     margin: 30px auto 20px auto;
     padding: 20px 30px;
 }
@@ -55,7 +55,8 @@ form#task-form select {
     box-sizing: border-box;
 }
 
-form#task-form button[type="submit"] {
+form#task-form button[type="submit"], 
+form#task-form .btn-primary {
     background-color: #1976d2;
     color: #fff;
     border: none;
@@ -64,15 +65,18 @@ form#task-form button[type="submit"] {
     font-size: 1em;
     cursor: pointer;
     transition: background 0.2s;
+    margin-top: 10px;
+    width: 100%;
 }
 
-form#task-form button[type="submit"]:hover {
+form#task-form button[type="submit"]:hover, 
+form#task-form .btn-primary:hover {
     background-color: #125ea2;
 }
 
 /* Table styles */
 #task-table {
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
     background-color: #fff;
@@ -98,22 +102,25 @@ form#task-form button[type="submit"]:hover {
     background-color: #fff;
 }
 
-#task-table select.status-select {
+#task-table select.status-select,
+#task-table .form-select.status-select {
     padding: 4px 8px;
     border-radius: 4px;
     border: 1px solid #bbb;
     background-color: #f8f8f8;
+    min-width: 120px;
 }
 
 /* Filter form styles */
 form#filter-form {
-    max-width: 600px;
+    max-width: 700px;
     margin: 20px auto 30px auto;
     padding: 12px 20px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 16px;
     justify-content: center;
@@ -130,6 +137,7 @@ form#filter-form select {
     border: 1px solid #bbb;
     background-color: #f8f8f8;
     font-size: 1em;
+    min-width: 120px;
 }
 
 /* Responsive design */
@@ -140,5 +148,11 @@ form#filter-form select {
     form#task-form, form#filter-form {
         max-width: 98%;
         padding: 10px;
+    }
+    .container {
+        padding: 0 2px !important;
+    }
+    .table-responsive {
+        overflow-x: auto;
     }
 }

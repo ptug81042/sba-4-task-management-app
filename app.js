@@ -29,18 +29,28 @@ function loadTasks() {
     }
 }
 
-// Function to add a new task
-function addTask(taskName, category, deadline, status) {
+// Function to add or update a task
+function addOrUpdateTask(taskName, category, deadline, status, editIndex = null) {
     const formattedDeadline = formatDate(deadline); // Format deadline before adding
-    const task = {
-        name: taskName,
-        category: category,
-        deadline: formattedDeadline,
-        status: status
-    };
-    tasks.push(task);
+    if (editIndex !== null && editIndex !== "") {
+        // Update existing task
+        tasks[editIndex] = {
+            name: taskName,
+            category: category,
+            deadline: formattedDeadline,
+            status: status
+        };
+    } else {
+        // Add new task
+        const task = {
+            name: taskName,
+            category: category,
+            deadline: formattedDeadline,
+            status: status
+        };
+        tasks.push(task);
+    }
     saveTasks();
-    return task;
 }
 
 // Function to check and update overdue tasks
@@ -108,7 +118,7 @@ function renderTasks() {
             <td>${task.category}</td>
             <td>${task.deadline}</td>
             <td>
-                <select data-index="${index}" class="status-select">
+                <select data-index="${index}" class="status-select form-select form-select-sm">
                     <option value="In Progress" ${task.status === "In Progress" ? "selected" : ""}>In Progress</option>
                     <option value="Completed" ${task.status === "Completed" ? "selected" : ""}>Completed</option>
                     <option value="Pending" ${task.status === "Pending" ? "selected" : ""}>Pending</option>
@@ -116,6 +126,10 @@ function renderTasks() {
                     <option value="On Hold" ${task.status === "On Hold" ? "selected" : ""}>On Hold</option>
                     <option value="Cancelled" ${task.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
                 </select>
+            </td>
+            <td>
+                <button class="btn btn-warning btn-sm edit-task me-1" data-index="${index}">Edit</button>
+                <button class="btn btn-danger btn-sm delete-task" data-index="${index}">Delete</button>
             </td>
         `;
         tbody.appendChild(row);
@@ -132,17 +146,21 @@ document.addEventListener('DOMContentLoaded', function() {
     if (filterStatus) filterStatus.addEventListener('change', renderTasks);
 });
 
-// Handle form submission to add a new task
+// Handle form submission to add or update a task
 document.getElementById('task-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const taskName = document.getElementById('task-name').value;
     const category = document.getElementById('category').value;
     const deadline = document.getElementById('deadline').value;
     const status = document.getElementById('status').value;
+    const editIndex = document.getElementById('edit-index').value;
 
-    addTask(taskName, category, deadline, status);
+    addOrUpdateTask(taskName, category, deadline, status, editIndex !== "" ? Number(editIndex) : null);
     renderTasks();
     this.reset();
+    document.getElementById('edit-index').value = "";
+    document.getElementById('submit-btn').textContent = "Add Task";
+    document.getElementById('cancel-edit-btn').classList.add('d-none');
 });
 
 // Handle status change in the table
@@ -153,6 +171,35 @@ document.getElementById('task-table-body').addEventListener('change', function(e
         saveTasks();
         renderTasks();
     }
+});
+
+// Handle delete and edit button click
+document.getElementById('task-table-body').addEventListener('click', function(e) {
+    const index = e.target.getAttribute('data-index');
+    if (e.target.classList.contains('delete-task')) {
+        tasks.splice(index, 1);
+        saveTasks();
+        renderTasks();
+    }
+    if (e.target.classList.contains('edit-task')) {
+        const task = tasks[index];
+        document.getElementById('task-name').value = task.name;
+        document.getElementById('category').value = task.category;
+        document.getElementById('deadline').value = task.deadline;
+        document.getElementById('status').value = task.status;
+        document.getElementById('edit-index').value = index;
+        document.getElementById('submit-btn').textContent = "Update Task";
+        document.getElementById('cancel-edit-btn').classList.remove('d-none');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+});
+
+// Handle cancel edit
+document.getElementById('cancel-edit-btn').addEventListener('click', function() {
+    document.getElementById('task-form').reset();
+    document.getElementById('edit-index').value = "";
+    document.getElementById('submit-btn').textContent = "Add Task";
+    this.classList.add('d-none');
 });
 
 // Initial render
