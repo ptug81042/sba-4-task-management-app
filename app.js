@@ -1,5 +1,5 @@
 // Array to store tasks
-const tasks = [];
+let tasks = [];
 
 // Helper function to format date as YYYY-MM-DD
 function formatDate(dateStr) {
@@ -12,6 +12,22 @@ function formatDate(dateStr) {
     return `${year}-${month}-${day}`;
 }
 
+// Save tasks to localStorage
+function saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Load tasks from localStorage
+function loadTasks() {
+    const stored = localStorage.getItem('tasks');
+    if (stored) {
+        try {
+            tasks = JSON.parse(stored);
+        } catch {
+            tasks = [];
+        }
+    }
+}
 
 // Function to add a new task
 function addTask(taskName, category, deadline, status) {
@@ -23,23 +39,29 @@ function addTask(taskName, category, deadline, status) {
         status: status
     };
     tasks.push(task);
+    saveTasks();
     return task;
 }
 
 // Function to check and update overdue tasks
 function updateOverdueTasks() {
     const today = new Date();
+    let changed = false;
     tasks.forEach(task => {
         // Only update if not already Completed or Cancelled
         if (
-            task.status !== "Completed" && 
-            task.status !== "Cancelled" && 
-            task.deadline && 
+            task.status !== "Completed" &&
+            task.status !== "Cancelled" &&
+            task.deadline &&
             new Date(task.deadline) < today
         ) {
-            task.status = "Overdue";
+            if (task.status !== "Overdue") {
+                task.status = "Overdue";
+                changed = true;
+            }
         }
     });
+    if (changed) saveTasks();
 }
 
 // Populate category filter dropdown with unique categories
@@ -75,7 +97,7 @@ function renderTasks() {
     tasks.forEach((task, index) => {
         // Apply filters
         if (
-            (filterCategory && task.category !== filterCategory) || 
+            (filterCategory && task.category !== filterCategory) ||
             (filterStatus && task.status !== filterStatus)
         ) {
             return;
@@ -88,7 +110,7 @@ function renderTasks() {
             <td>
                 <select data-index="${index}" class="status-select">
                     <option value="In Progress" ${task.status === "In Progress" ? "selected" : ""}>In Progress</option>
-                    <option value="Completed" ${task.status === "Completed" ? "selected" : ""}>Completed</Option>
+                    <option value="Completed" ${task.status === "Completed" ? "selected" : ""}>Completed</option>
                     <option value="Pending" ${task.status === "Pending" ? "selected" : ""}>Pending</option>
                     <option value="Overdue" ${task.status === "Overdue" ? "selected" : ""}>Overdue</option>
                     <option value="On Hold" ${task.status === "On Hold" ? "selected" : ""}>On Hold</option>
@@ -102,6 +124,8 @@ function renderTasks() {
 
 // Listen for filter changes
 document.addEventListener('DOMContentLoaded', function() {
+    loadTasks();
+    renderTasks();
     const filterCategory = document.getElementById('filter-category');
     const filterStatus = document.getElementById('filter-status');
     if (filterCategory) filterCategory.addEventListener('change', renderTasks);
@@ -126,6 +150,7 @@ document.getElementById('task-table-body').addEventListener('change', function(e
     if (e.target.classList.contains('status-select')) {
         const index = e.target.getAttribute('data-index');
         tasks[index].status = e.target.value;
+        saveTasks();
         renderTasks();
     }
 });
