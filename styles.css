@@ -1,0 +1,144 @@
+/* Page reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General page styles */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f6f8fa;
+    margin: 0;
+    padding: 0 20px 40px 20px;
+}
+
+h1 {
+    color: #333;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+h2 {
+    color: #444;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Form styles */
+form#task-form {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    max-width: 400px;
+    margin: 30px auto 20px auto;
+    padding: 20px 30px;
+}
+
+form#task-form label {
+    font-weight: bold;
+    color: #222;
+}
+
+form#task-form input[type="text"], 
+form#task-form input[type="date"],
+form#task-form select {
+    width: 100%;
+    padding: 7px 10px;
+    margin-top: 4px;
+    margin-bottom: 14px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+form#task-form button[type="submit"] {
+    background-color: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 18px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+form#task-form button[type="submit"]:hover {
+    background-color: #125ea2;
+}
+
+/* Table styles */
+#task-table {
+    width: 90%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+#task-table th, #task-table td {
+    padding: 10px;
+    text-align: left;
+}
+
+#task-table th {
+    background-color: #1976d2;
+    color: #fff;
+    font-weight: bold;
+}
+
+#task-table tr:nth-child(even) {
+    background-color: #f2f6fa;
+}
+
+#task-table tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+#task-table select.status-select {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #bbb;
+    background-color: #f8f8f8;
+}
+
+/* Filter form styles */
+form#filter-form {
+    max-width: 600px;
+    margin: 20px auto 30px auto;
+    padding: 12px 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: center;
+}
+
+form#filter-form label {
+    font-weight: bold;
+    color: #222;
+}
+
+form#filter-form select {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #bbb;
+    background-color: #f8f8f8;
+    font-size: 1em;
+}
+
+/* Responsive design */
+@media (max-width: 700px) {
+    #task-table, #task-table th, #task-table td {
+        font-size: 0.95em;
+    }
+    form#task-form, form#filter-form {
+        max-width: 98%;
+        padding: 10px;
+    }
+}

@@ -42,12 +42,44 @@ function updateOverdueTasks() {
     });
 }
 
-// Function to render the task list in the table
+// Populate category filter dropdown with unique categories
+function updateCategoryFilter() {
+    const filterCategory = document.getElementById('filter-category');
+    if (!filterCategory) return;
+    // Get unique categories
+    const categories = Array.from(new Set(tasks.map(task => task.category)));
+    // Save current selection
+    const current = filterCategory.value;
+    // Clear and add "All"
+    filterCategory.innerHTML = '<option value="">All</option>';
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        filterCategory.appendChild(option);
+    });
+    // Restore selection if possible
+    filterCategory.value = current;
+}
+
+// Function to render the task list in the table with filtering
 function renderTasks() {
     updateOverdueTasks(); // Check deadlines before rendering
+    updateCategoryFilter(); // Update category filter options
+
+    const filterCategory = document.getElementById('filter-category') ? document.getElementById('filter-category').value : '';
+    const filterStatus = document.getElementById('filter-status') ? document.getElementById('filter-status').value : '';
+
     const tbody = document.getElementById('task-table-body');
     tbody.innerHTML = '';
     tasks.forEach((task, index) => {
+        // Apply filters
+        if (
+            (filterCategory && task.category !== filterCategory) || 
+            (filterStatus && task.status !== filterStatus)
+        ) {
+            return;
+        }
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${task.name}</td>
@@ -67,6 +99,14 @@ function renderTasks() {
         tbody.appendChild(row);
     })
 }
+
+// Listen for filter changes
+document.addEventListener('DOMContentLoaded', function() {
+    const filterCategory = document.getElementById('filter-category');
+    const filterStatus = document.getElementById('filter-status');
+    if (filterCategory) filterCategory.addEventListener('change', renderTasks);
+    if (filterStatus) filterStatus.addEventListener('change', renderTasks);
+});
 
 // Handle form submission to add a new task
 document.getElementById('task-form').addEventListener('submit', function(e) {

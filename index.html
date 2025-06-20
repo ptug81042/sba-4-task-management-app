@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
         <title>Task Management App</title>
     </head>
     <body>
@@ -45,5 +46,18 @@
                 <!-- Tasks will be dynamically inserted here -->
             </tbody>
         </table>
+
+        <form id="filter-form">
+            <label for="filter-category">Filter by Category: </label>
+            <select id="filter-status">
+                <option value="">All</option>
+                <option value="IN Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Pending">Pending</option>
+                <option value="Overdue">Overdue</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+        </form>
     </body>
 </html>
