@@ -1,20 +1,50 @@
 // Array to store tasks
 const tasks = [];
 
+// Helper function to format date as YYYY-MM-DD
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    if (isNaN(date)) return dateStr;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+
 // Function to add a new task
 function addTask(taskName, category, deadline, status) {
+    const formattedDeadline = formatDate(deadline); // Format deadline before adding
     const task = {
         name: taskName,
         category: category,
-        deadline: deadline,
+        deadline: formattedDeadline,
         status: status
     };
     tasks.push(task);
     return task;
 }
 
+// Function to check and update overdue tasks
+function updateOverdueTasks() {
+    const today = new Date();
+    tasks.forEach(task => {
+        // Only update if not already Completed or Cancelled
+        if (
+            task.status !== "Completed" && 
+            task.status !== "Cancelled" && 
+            task.deadline && 
+            new Date(task.deadline) < today
+        ) {
+            task.status = "Overdue";
+        }
+    });
+}
+
 // Function to render the task list in the table
 function renderTasks() {
+    updateOverdueTasks(); // Check deadlines before rendering
     const tbody = document.getElementById('task-table-body');
     tbody.innerHTML = '';
     tasks.forEach((task, index) => {
